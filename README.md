@@ -1,4 +1,4 @@
-# Teamwork
+# Microservice E-commerce
 
 An e-commerce firm that is currently migrating their api-driven architecture to microservices which requires making the customer, product, order and payment services communicate seamlessly
 
