@@ -24,7 +24,7 @@ export default class JsonWebToken {
   private secret = process.env.JWT_SECRET_KEY as string;
   private issuer = ISSUER;
 
-  constructor(payload: IUser, expire = '30m') {
+  constructor(payload: IUser, expire = '1hr') {
     this.expiresIn = expire;
     this.payload = payload;
   }

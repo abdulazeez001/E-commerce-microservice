@@ -27,7 +27,7 @@ export default (config: Config): Application => {
 
   mongoose
     .connect(config.mongodb.dsn, config.mongodb.options)
-    .then(() => console.log('Successfully connected to MongoDb'))
+    .then(() => console.log('Successfully connected to the Orders Db'))
     .catch((err) => console.log('Could not connect to MongoDb', err));
 
   app.use(cors());

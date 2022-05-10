@@ -16,6 +16,7 @@ import NotFoundError from './utilities/core/ApiError/NotFoundError';
 import BadRequestError from './utilities/core/ApiError/BadRequestError';
 import ApiError from './utilities/core/ApiError/ApiError';
 import InternalError from './utilities/core/ApiError/InternalError';
+import seed from './seed';
 
 export default (config: Config): Application => {
   const app: Application = express();
@@ -27,7 +28,10 @@ export default (config: Config): Application => {
 
   mongoose
     .connect(config.mongodb.dsn, config.mongodb.options)
-    .then(() => console.log('Successfully connected to MongoDb'))
+    .then(() => {
+      console.log('Successfully connected to the Products Db');
+      seed();
+    })
     .catch((err) => console.log('Could not connect to MongoDb', err));
 
   app.use(cors());

@@ -46,7 +46,6 @@ export default (): Router => {
 
   router.post(
     '/products/:productId/order',
-    // Validator(Product.orderProductSchema()),
     asyncHandler(async (req: Request, res: Response) => {
       const pId = req.params.productId as unknown as mongoose.Types.ObjectId;
       const cId = res.locals.user?.id as unknown as mongoose.Types.ObjectId;
@@ -54,8 +53,10 @@ export default (): Router => {
       const config = {
         headers: { Authorization: `Bearer ${req.headers?.authorization?.split(' ')[1]}` },
       };
+
+      const order_url = `${process.env.ORDER_URL as string}/orders` || `http://localhost:4002/orders`;
       const response = await axios.post(
-        `http://localhost:4002/orders`,
+        order_url,
         {
           customerId: cId,
           product: result,

@@ -37,6 +37,13 @@ export type CustomerResponse = {
   orderStatus: string;
 };
 
+export type toPaymentService = {
+  customerId: string;
+  orderId: string;
+  productId: string;
+  amount: number;
+};
+
 export interface IOrder extends Document {
   status: OrderStatus;
   customerId: string;

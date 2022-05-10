@@ -1,0 +1,70 @@
+version: '3.2'
+services:
+  customer-service:
+    build: ./customer
+    ports:
+      - '8080:5000'
+    links:
+      - mongo
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_PROD_URI=mongodb://mongo:27017/customer-service
+      - JWT_SECRET_KEY=shittu
+
+  product-service:
+    build: ./product
+    ports:
+      - '8081:5000'
+    links:
+      - mongo
+      - order-service
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_PROD_URI=mongodb://mongo:27017/product-service
+      - JWT_SECRET_KEY=shittu
+
+  order-service:
+    build: ./order
+    ports:
+      - '8082:5000'
+    links:
+      - mongo
+      - rabbitmq
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_PROD_URI=mongodb://mongo:27017/order-service
+      - AMQP_URL=amqp://rabbitmq
+      - JWT_SECRET_KEY=shittu
+
+  payment-service:
+    build: ./payment
+    ports:
+      - '8083:5000'
+    restart: always
+    links:
+      - mongo
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_PROD_URI=mongodb://mongo:27017/payment-service
+      - AMQP_URL=amqp://@rabbitmq
+      - JWT_SECRET_KEY=shittu
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - '27017:27017'
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672

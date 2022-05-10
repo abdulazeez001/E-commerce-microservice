@@ -27,23 +27,13 @@ export default (): Router => {
     '/orders',
     asyncHandler(async (req: Request, res: Response) => {
       const { customerId, product } = req.body;
-
       const data = {
         status: OrderStatus.CREATED,
         customerId,
         productId: product._id,
         price: product.price,
       } as IOrder;
-
-      const result = await new OrderService().createOrder(data);
-
-      const customerResponse: CustomerResponse = {
-        customerId: result.customerId,
-        orderId: result.id,
-        productId: result.productId,
-        orderStatus: result.status,
-      };
-
+      const customerResponse = await new OrderService().makeOrder(data);
       return new SuccessResponse<CustomerResponse>('Successful', customerResponse).send(res);
     })
   );
@@ -51,7 +41,7 @@ export default (): Router => {
   router.get(
     '/orders/:orderId',
     asyncHandler(async (req: Request, res: Response) => {
-      const data = req.params.productId as unknown as mongoose.Types.ObjectId;
+      const data = req.params.orderId as unknown as mongoose.Types.ObjectId;
       const result: IOrder | null = await new OrderService().findOrderById(data);
       return new SuccessResponse<IOrder | null>('Successful', result).send(res);
     })
@@ -60,7 +50,7 @@ export default (): Router => {
   router.delete(
     '/orders/:orderId',
     asyncHandler(async (req: Request, res: Response) => {
-      const data = req.params.productId as unknown as mongoose.Types.ObjectId;
+      const data = req.params.orderId as unknown as mongoose.Types.ObjectId;
       const result: IOrder | null = await new OrderService().deleteOrder(data);
       return new SuccessResponse<IOrder | null>('Successful', result).send(res);
     })
